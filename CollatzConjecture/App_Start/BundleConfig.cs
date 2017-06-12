@@ -26,6 +26,16 @@ namespace CollatzConjecture
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            //"~/Content/PagedList.css")); 
+            //suggestion to use came from ASP tutorial
+            // https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/sorting-filtering-and-paging-with-the-entity-framework-in-an-asp-net-mvc-application
+            //index.cshtml: <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+            //I believe actual file came from PagedList NuGet package
+            //not using because the verbatim code is duplicated in bootstrap.css
+            //according to stack overflow post
+            //https://stackoverflow.com/questions/5902858/order-of-prioritization-when-using-multiple-contradictory-css-files
+            //which file gets used is based on the order that the .css
+            //files are loaded, which could cause a confusing situation!
         }
     }
 }

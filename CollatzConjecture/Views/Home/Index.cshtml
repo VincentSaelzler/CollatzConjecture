@@ -1,4 +1,8 @@
-﻿@model IEnumerable<CollatzConjecture.Models.StartingNumber>
+﻿@model PagedList.IPagedList<CollatzConjecture.Models.StartingNumber>
+@using PagedList.Mvc;
+
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
+@*see ~/App_Start/BundleConfig.cs for details on why this is commented out*@
 
 @{
     ViewBag.Title = "Index";
@@ -13,8 +17,8 @@
 @using (Html.BeginForm("Index", "Home", FormMethod.Get))
 {
     <p>
-        Even Expression: @Html.TextBox("evenExp", ViewBag.EvenExp as string)
-        Odd Expression: @Html.TextBox("oddExp", ViewBag.OddExp as string)
+        Even Expression: @Html.TextBox("evenExp", ViewBag.CurrentEvenExp as string)
+        Odd Expression: @Html.TextBox("oddExp", ViewBag.CurrentOddExp as string)
         <input type="submit" value="Search" />
     </p>
 }
@@ -25,13 +29,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("The Number", "Index", new { sortOrder = ViewBag.TheNumSortParm, evenExp = ViewBag.EvenExp, oddExp = ViewBag.OddExp })
+            @Html.ActionLink("The Number", "Index", new { sortOrder = ViewBag.TheNumSortParm, currentEvenExp = ViewBag.CurrentEvenExp, currentOddExp = ViewBag.CurrentOddExp })
         </th>
         <th>
-            @Html.ActionLink("Number of Steps", "Index", new { sortOrder = ViewBag.NumStepsSortParm, evenExp = ViewBag.EvenExp, oddExp = ViewBag.OddExp })
+            @Html.ActionLink("Number of Steps", "Index", new { sortOrder = ViewBag.NumStepsSortParm, currentEvenExp = ViewBag.CurrentEvenExp, currentOddExp = ViewBag.CurrentOddExp })
         </th>
         <th>
-            @Html.DisplayNameFor(m => m.StepsString)
+            Steps Graph
         </th>
         <th></th>
     </tr>
@@ -70,10 +74,17 @@
                     });
                 </script>
             </td>
-            @*<td>
+            @*UNDONE: Show drill down details on number
+                <td>
                     @Html.ActionLink("Details", "Details", new { id = item.StartingNumberId }) |
                 </td>*@
         </tr>
     }
 
 </table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentEvenExp = ViewBag.CurrentEvenExp, currentOddExp = ViewBag.CurrentOddExp }))
