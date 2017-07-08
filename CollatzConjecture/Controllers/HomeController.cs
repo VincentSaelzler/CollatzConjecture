@@ -35,10 +35,10 @@ namespace CollatzConjecture.Controllers
             ViewBag.CurrentOddExp = oddExp;
 
             //generate data
-            IList<StartingNumber> numbers = new List<StartingNumber>();
+            IList<CollatzSequence> collatzSequences = new List<CollatzSequence>();
             for (int i = 1; i < 100; i++)
             {
-                numbers.Add(new StartingNumber(i, int.Parse(evenExp), int.Parse(oddExp))); //TODO: error checking
+                collatzSequences.Add(new CollatzSequence(i, int.Parse(evenExp), int.Parse(oddExp))); //TODO: parse error checking
             }
 
             //sort
@@ -46,27 +46,27 @@ namespace CollatzConjecture.Controllers
             ViewBag.TheNumSortParm = string.IsNullOrEmpty(sortOrder) ? "thenum_desc" : "";
             ViewBag.NumStepsSortParm = sortOrder == "numsteps" ? "numsteps_desc" : "numsteps";
 
-            IOrderedEnumerable<StartingNumber> orderedNumbers;
+            IOrderedEnumerable<CollatzSequence> orderedCollatzSequences;
             switch (sortOrder)
             {
                 case "thenum_desc":
-                    orderedNumbers = numbers.OrderByDescending(n => n.TheNum);
+                    orderedCollatzSequences = collatzSequences.OrderByDescending(cs => cs.InitialValue);
                     break;
                 case "numsteps":
-                    orderedNumbers = numbers.OrderBy(n => n.NumSteps);
+                    orderedCollatzSequences = collatzSequences.OrderBy(cs => cs.TotalStoppingTime); //TODO: use property
                     break;
                 case "numsteps_desc":
-                    orderedNumbers = numbers.OrderByDescending(n => n.NumSteps);
+                    orderedCollatzSequences = collatzSequences.OrderByDescending(cs => cs.TotalStoppingTime);
                     break;
                 default:
-                    orderedNumbers = numbers.OrderBy(s => s.TheNum);
+                    orderedCollatzSequences = collatzSequences.OrderBy(cs => cs.InitialValue);
                     break;
             }
 
             int pageSize = 10; //UNDONE: items per page
             int pageNumber = page ?? 1;
 
-            return View(orderedNumbers.ToPagedList(pageNumber, pageSize));
+            return View(orderedCollatzSequences.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult About()
